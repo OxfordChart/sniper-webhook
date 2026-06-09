@@ -11,7 +11,12 @@ app.post('/webhook', async (req, res) => {
     try {
         let msg = ''
         if (typeof req.body === 'string') {
-            msg = req.body
+            try {
+                const parsed = JSON.parse(req.body)
+                msg = parsed.text || req.body
+            } catch {
+                msg = req.body
+            }
         } else if (req.body.text) {
             msg = req.body.text
         } else {
@@ -21,10 +26,7 @@ app.post('/webhook', async (req, res) => {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                chat_id: CHAT_ID, 
-                text: msg 
-            })
+            body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
         })
         res.sendStatus(200)
     } catch (err) {
