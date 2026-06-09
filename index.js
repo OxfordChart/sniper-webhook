@@ -7,22 +7,32 @@ app.use(express.text())
 const BOT_TOKEN = process.env.BOT_TOKEN
 const CHAT_ID   = process.env.CHAT_ID
 
+function extractText(body) {
+    // Se è stringa, prova a fare il parse JSON
+    if (typeof body === 'string') {
+        try {
+            const parsed = JSON.parse(body)
+            return parsed.text || body
+        } catch {
+            return body
+        }
+    }
+    // Se è oggetto con campo text, prendi solo text
+    if (typeof body === 'object' && body.text) {
+        // il campo text potrebbe essere ancora un JSON stringa
+        try {
+            const parsed = JSON.parse(body.text)
+            return parsed.text || body.text
+        } catch {
+            return body.text
+        }
+    }
+    return JSON.stringify(body)
+}
+
 app.post('/webhook', async (req, res) => {
     try {
-        let msg = ''
-        if (typeof req.body === 'string') {
-            try {
-                const parsed = JSON.parse(req.body)
-                msg = parsed.text || req.body
-            } catch {
-                msg = req.body
-            }
-        } else if (req.body.text) {
-            msg = req.body.text
-        } else {
-            msg = JSON.stringify(req.body)
-        }
-
+        const msg = extractText(req.body)
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
