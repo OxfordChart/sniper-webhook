@@ -39,6 +39,9 @@ async function sendToTelegram(chatId, text) {
 app.post('/webhook', async (req, res) => {
     try {
         const msg = extractText(req.body)
+        console.log('CHAT_ID_VIP:', CHAT_ID_VIP)
+        console.log('CHAT_ID_BASE:', CHAT_ID_BASE)
+        console.log('Messaggio:', msg)
 
         // Il VIP riceve sempre tutto
         await sendToTelegram(CHAT_ID_VIP, msg)
