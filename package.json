@@ -1,5 +1,5 @@
 {
-  "name": "sniper-webhook",
+  "name": "lumex-webhook",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
