@@ -43,6 +43,11 @@ app.post('/webhook', async (req, res) => {
         console.log('CHAT_ID_BASE:', CHAT_ID_BASE)
         console.log('Messaggio:', msg)
 
+        // Filtra: accetta solo messaggi LUMEX o SNIPER
+        if (!msg.includes('LUMEX') && !msg.includes('SNIPER')) {
+            return res.sendStatus(200)
+        }
+
         // Il VIP riceve sempre tutto
         await sendToTelegram(CHAT_ID_VIP, msg)
 
@@ -58,6 +63,6 @@ app.post('/webhook', async (req, res) => {
     }
 })
 
-app.get('/', (req, res) => res.send('SNIPER Webhook attivo ✅'))
+app.get('/', (req, res) => res.send('LUMEX Webhook attivo ✅'))
 
 app.listen(process.env.PORT || 3000, () => console.log('Server avviato'))
