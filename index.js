@@ -44,7 +44,7 @@ app.post('/webhook', async (req, res) => {
         console.log('Messaggio:', msg)
 
         // Filtra: accetta solo messaggi LUMEX o SNIPER
-        if (!msg.includes('LUMEX') && !msg.includes('SNIPER')) {
+        if (!msg.includes('LUMEX') && !msg.includes('SNIPER') && !msg.includes('Buongiorno')) {
             return res.sendStatus(200)
         }
 
